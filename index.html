@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" onkeypress="jump()">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Game Dino</title>
+    <audio id="jumpSound" src="jump.mp3"></audio>
+    <audio id="dieSound" src="die.mp3"></audio>
+  </head>
+  <body>
+    <div class="title-container">
+      <h1>JUMP !!!</h1>
+    </div>
+    <div class="box" id="box">
+      <div class="score" id="score">Score : 0</div>
+      <img src="dino.png" alt="" id="dino" />
+      <img src="cactus.png" alt="" id="cactus" />
+      <div class="roadContainer" id="roadContainer">
+        <img src="road.png" alt="" />
+      </div>
+    </div>
+  </body>
+  <script>
+    // Mendapatkan Referensi Elemen HTML
+    const char = document.getElementById("dino");
+    const cactus = document.getElementById("cactus");
+    const playerScore = document.getElementById("score");
+
+    // Inisialisasi Variabel Skor dan Interval
+    let score = 0;
+    let interval = null;
+
+    // Fungsi Jumlah Skor
+    let jumlahScore = () => {
+      score++;
+      playerScore.innerHTML = `Score : ${score}`;
+    };
+
+    // Mendapatkan Referensi audio
+    const jumpSound = document.getElementById("jumpSound");
+    const dieSound = document.getElementById("dieSound");
+
+    // Fungsi Pemutaran Suara
+    function playJumpSound() {
+      jumpSound.play();
+    }
+    function playDieSound() {
+      dieSound.play();
+    }
+
+    // Fungsi loncat
+    function jump() {
+      if (char.classList != "animate") {
+        char.classList.add("animate");
+        playJumpSound();
+      }
+      setTimeout(function () {
+        char.classList.remove("animate");
+      }, 500);
+      let score = 0;
+      interval = setInterval(jumlahScore, 100);
+    }
+
+    // Interval deteksi tabrakan dengan kaktus
+    const ifHitCactus = setInterval(function () {
+      const charTop = parseInt(
+        window.getComputedStyle(char).getPropertyValue("top")
+      );
+      const cactusLeft = parseInt(
+        window.getComputedStyle(cactus).getPropertyValue("left")
+      );
+      if (cactusLeft < 90 && cactusLeft > 0 && charTop >= 60) {
+        cactus.style.animation = "none";
+        cactus.style.display = "none";
+        playDieSound();
+        if (confirm("Dino kamu nabrak kaktus, ingin ulang ?")) {
+          window.location.reload();
+        }
+      }
+    });
+  </script>
+</html>
